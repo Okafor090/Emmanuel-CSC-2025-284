@@ -1,0 +1,212 @@
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0f0f0f;
+  --surface:     #1c1c1e;
+  --glass:       rgba(255,255,255,0.06);
+  --border:      rgba(255,255,255,0.10);
+
+  --num-bg:      #2c2c2e;
+  --num-hover:   #3a3a3c;
+  --num-active:  #48484a;
+
+  --sec-bg:      #636366;
+  --sec-hover:   #7c7c80;
+
+  --op-bg:       #ff9f0a;
+  --op-hover:    #ffb340;
+  --op-active:   #ffffff;
+  --op-text-active: #ff9f0a;
+
+  --text-primary:   #ffffff;
+  --text-secondary: rgba(255,255,255,0.55);
+  --text-dim:       rgba(255,255,255,0.30);
+
+  --radius-btn:  50%;
+  --radius-calc: 28px;
+
+  --font-display: 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Wrapper ──────────────────────────────────── */
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* ── Calculator Shell ─────────────────────────── */
+.calculator {
+  width: 340px;
+  background: var(--surface);
+  border-radius: var(--radius-calc);
+  padding: 24px 20px 20px;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.7),
+    0 0 0 1px var(--border);
+}
+
+/* ── Brand Label ──────────────────────────────── */
+.brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  text-align: right;
+  margin-bottom: 8px;
+  padding-right: 4px;
+}
+
+/* ── Display ──────────────────────────────────── */
+.display {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 20px 14px;
+  margin-bottom: 20px;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.display__expression {
+  font-size: 15px;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  min-height: 22px;
+  word-break: break-all;
+  text-align: right;
+  transition: color 0.15s;
+}
+
+/* Operator symbol gets a highlight tint */
+.display__expression .op-highlight {
+  color: var(--op-bg);
+  font-weight: 600;
+}
+
+.display__result {
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: font-size 0.1s ease, opacity 0.15s;
+  word-break: break-all;
+  text-align: right;
+  max-width: 100%;
+}
+
+/* Shrink large numbers */
+.display__result.shrink-1 { font-size: 36px; }
+.display__result.shrink-2 { font-size: 28px; }
+.display__result.shrink-3 { font-size: 22px; }
+
+/* ── Button Grid ──────────────────────────────── */
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* ── Button Base ──────────────────────────────── */
+.btn {
+  height: 68px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-primary);
+  background: var(--num-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.12s, transform 0.08s, color 0.12s;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
+}
+
+.btn:hover  { background: var(--num-hover); }
+.btn:active { background: var(--num-active); transform: scale(0.94); }
+
+/* ── Wide (0 key) ─────────────────────────────── */
+.btn--wide {
+  grid-column: span 2;
+  border-radius: 50px;
+  justify-content: flex-start;
+  padding-left: 28px;
+}
+
+/* ── Secondary (AC, +/−, %) ───────────────────── */
+.btn--secondary {
+  background: var(--sec-bg);
+  color: #000;
+  font-weight: 500;
+}
+.btn--secondary:hover  { background: var(--sec-hover); }
+.btn--secondary:active { background: #8e8e93; transform: scale(0.94); }
+
+/* ── Operator (+, −, ×, ÷, =) ────────────────── */
+.btn--operator {
+  background: var(--op-bg);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 300;
+}
+.btn--operator:hover  { background: var(--op-hover); }
+.btn--operator:active { transform: scale(0.94); }
+
+/* Active state when operator is selected */
+.btn--operator.is-active {
+  background: var(--op-active);
+  color: var(--op-text-active);
+}
+.btn--operator.is-active:hover { background: #f0f0f0; }
+
+/* Equals gets a slightly different shade */
+.btn--equals { background: var(--op-bg); }
+
+/* ── Ripple effect ────────────────────────────── */
+.btn .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  transform: scale(0);
+  animation: ripple 0.4s linear;
+  pointer-events: none;
+}
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 380px) {
+  .calculator { width: 100%; }
+  .btn { height: 60px; font-size: 20px; }
+  .display__result { font-size: 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn .ripple { animation: none; }
+}
